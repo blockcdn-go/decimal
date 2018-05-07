@@ -396,7 +396,7 @@ func (d *MyDecimal) ToBytes() (str []byte) {
 }
 
 func (d *MyDecimal) ToString() (str []byte) {
-	return string(ToBytes())
+	return string(d.ToBytes())
 }
 
 // FromString parses decimal from string.
