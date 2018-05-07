@@ -395,7 +395,7 @@ func (d *MyDecimal) ToBytes() (str []byte) {
 	return
 }
 
-func (d *MyDecimal) ToString() (str []byte) {
+func (d *MyDecimal) ToString() (string) {
 	return string(d.ToBytes())
 }
 
