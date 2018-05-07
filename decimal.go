@@ -287,7 +287,7 @@ func (d *MyDecimal) String() string {
 	err := tmp.Round(&tmp, int(tmp.resultFrac), ModeHalfEven)
 
 	logger.Log(core.Error, err)
-	return string(tmp.ToString())
+	return string(tmp.ToBytes())
 }
 
 func (d *MyDecimal) stringSize() int {
@@ -311,14 +311,14 @@ func (d *MyDecimal) removeLeadingZeros() (wordIdx int, digitsInt int) {
 	return
 }
 
-// ToString converts decimal to its printable string representation without rounding.
+// ToBytes converts decimal to its printable string representation without rounding.
 //
 //  RETURN VALUE
 //
 //      str       - result string
 //      errCode   - eDecOK/eDecTruncate/eDecOverflow
 //
-func (d *MyDecimal) ToString() (str []byte) {
+func (d *MyDecimal) ToBytes() (str []byte) {
 	str = make([]byte, d.stringSize())
 	digitsFrac := int(d.digitsFrac)
 	wordStartIdx, digitsInt := d.removeLeadingZeros()
@@ -393,6 +393,10 @@ func (d *MyDecimal) ToString() (str []byte) {
 		str[strIdx] = '0'
 	}
 	return
+}
+
+func (d *MyDecimal) ToString() (str []byte) {
+	return string(ToBytes(d))
 }
 
 // FromString parses decimal from string.
@@ -2359,12 +2363,12 @@ func is32(ranges []Range32, r uint32) bool {
 // 	if err != nil {
 // 		logger.Log(core.Error, err)
 // 	}
-// 	fmt.Println(string(sum.ToString()))
+// 	fmt.Println(string(sum.ToBytes()))
 
 // 	var sub MyDecimal
 // 	err = DecimalSub(a, b, &sub)
 // 	if err != nil {
 // 		logger.Log(core.Error, err)
 // 	}
-// 	fmt.Println(string(sub.ToString()))
+// 	fmt.Println(string(sub.ToBytes()))
 // }
