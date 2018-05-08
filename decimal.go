@@ -1090,7 +1090,7 @@ func (d *MyDecimal) FromFloat64(f float64) error {
 
 // ToFloat64 converts decimal to float64 value.
 func (d *MyDecimal) ToFloat64() (float64, error) {
-	f, err := strconv.ParseFloat(d.String(), 64)
+	f, err := strconv.ParseFloat(d.ToString(), 64)
 	if err != nil {
 		err = ErrOverflow
 	}
