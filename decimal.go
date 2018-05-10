@@ -5,11 +5,8 @@ import (
 	"strconv"
 	"errors"
 	"strings"
-
-	"github.com/gotoxu/log/core"
 )
 
-var logger core.Logger
 // RoundMode is the type for round mode.
 type RoundMode string
 
@@ -282,12 +279,10 @@ func (d *MyDecimal) GetDigitsFrac() int8 {
 }
 
 // String returns the decimal string representation rounded to resultFrac.
-func (d *MyDecimal) String() string {
+func (d *MyDecimal) String() (string, error) {
 	tmp := *d
 	err := tmp.Round(&tmp, int(tmp.resultFrac), ModeHalfEven)
-
-	logger.Log(core.Error, err)
-	return string(tmp.ToBytes())
+	return string(tmp.ToBytes()), err
 }
 
 func (d *MyDecimal) stringSize() int {
@@ -1381,16 +1376,15 @@ func writeWord(b []byte, word int32, size int) {
 }
 
 // Compare compares one decimal to another, returns -1/0/1.
-func (d *MyDecimal) Compare(to *MyDecimal) int {
+func (d *MyDecimal) Compare(to *MyDecimal) (int, error) {
 	if d.negative == to.negative {
 		cmp, err := doSub(d, to, nil)
-		logger.Log(core.Error, err)
-		return cmp
+		return cmp, err
 	}
 	if d.negative {
-		return -1
+		return -1, nil
 	}
-	return 1
+	return 1, nil
 }
 
 // DecimalAdd adds two decimals, sets the result to 'to'.
@@ -2160,23 +2154,21 @@ func NewDecFromUint(i uint64) *MyDecimal {
 }
 
 // NewDecFromFloatForTest creates a MyDecimal from float, as it returns no error, it should only be used in test.
-func NewDecFromFloatForTest(f float64) *MyDecimal {
+func NewDecFromFloatForTest(f float64) (*MyDecimal, error) {
 	dec := new(MyDecimal)
 	err := dec.FromFloat64(f)
-	logger.Log(core.Error, err)
-	return dec
+	return dec, err
 }
 
 // NewDecFromStringForTest creates a MyDecimal from string, as it returns no error, it should only be used in test.
-func NewDecFromStringForTest(s string) *MyDecimal {
+func NewDecFromStringForTest(s string) (*MyDecimal, error) {
 	dec := new(MyDecimal)
 	err := dec.FromString([]byte(s))
-	logger.Log(core.Error, err)
-	return dec
+	return dec, err
 }
 
 // NewMaxOrMinDec returns the max or min value decimal for given precision and fraction.
-func NewMaxOrMinDec(negative bool, prec, frac int) *MyDecimal {
+func NewMaxOrMinDec(negative bool, prec, frac int) (*MyDecimal, error) {
 	str := make([]byte, prec+2)
 	for i := 0; i < len(str); i++ {
 		str[i] = '9'
@@ -2189,8 +2181,7 @@ func NewMaxOrMinDec(negative bool, prec, frac int) *MyDecimal {
 	str[1+prec-frac] = '.'
 	dec := new(MyDecimal)
 	err := dec.FromString(str)
-	logger.Log(core.Error, err)
-	return dec
+	return dec, err
 }
 
 
@@ -2342,33 +2333,29 @@ func is32(ranges []Range32, r uint32) bool {
 	return false
 }
 
-// func test() {
-// 	str := "10.00000123054"
-// 	a := new(MyDecimal)
-// 	err := a.FromString([]byte(str))
-// 	if err != nil {
-// 		logger.Log(core.Error, err)
-// 	}
-// 	fmt.Println(a.digitsFrac, a.digitsInt, a.resultFrac, a.IsZero())
-
-// 	b := new(MyDecimal)
-// 	err = b.FromFloat64(212.000123054)
-// 	if err != nil {
-// 		logger.Log(core.Error, err)
-// 	}
-// 	fmt.Println(b.digitsFrac, b.digitsInt, b.resultFrac, b.IsZero())
-
-// 	var sum MyDecimal
-// 	err = DecimalAdd(a, b, &sum)
-// 	if err != nil {
-// 		logger.Log(core.Error, err)
-// 	}
-// 	fmt.Println(string(sum.ToBytes()))
-
-// 	var sub MyDecimal
-// 	err = DecimalSub(a, b, &sub)
-// 	if err != nil {
-// 		logger.Log(core.Error, err)
-// 	}
-// 	fmt.Println(string(sub.ToBytes()))
-// }
+//func main() {
+//	str := "10.00000123054"
+//	a := new(MyDecimal)
+//	err := a.FromString([]byte(str))
+//	if err != nil {
+//	}
+//	fmt.Println(a.digitsFrac, a.digitsInt, a.resultFrac, a.IsZero())
+//
+//	b := new(MyDecimal)
+//	err = b.FromFloat64(212.000123054)
+//	if err != nil {
+//	}
+//	fmt.Println(b.digitsFrac, b.digitsInt, b.resultFrac, b.IsZero())
+//
+//	var sum MyDecimal
+//	err = DecimalAdd(a, b, &sum)
+//	if err != nil {
+//	}
+//	fmt.Println(string(sum.ToBytes()))
+//
+//	var sub MyDecimal
+//	err = DecimalSub(a, b, &sub)
+//	if err != nil {
+//	}
+//	fmt.Println(string(sub.ToBytes()))
+//}
