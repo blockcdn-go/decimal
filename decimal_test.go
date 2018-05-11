@@ -613,3 +613,25 @@ func TestMaxOrMin(t *testing.T) {
 		assert.DeepEqual(t, s, tt.result)
 	}
 }
+
+func TestAbs(t *testing.T) {
+	type tcase struct {
+		a      string
+		result string
+	}
+	tests := []tcase{
+		{"-9.9", "9.9"},
+		{"0.9", "0.9"},
+		{"-9", "9"},
+		{"0", "0"},
+		{"-123.876213", "123.876213"},
+		{"99.99", "99.99"},
+	}
+
+	for _, tt := range tests {
+		var a MyDecimal
+		a.FromString([]byte(tt.a))
+		dec := a.Abs()
+		assert.DeepEqual(t, dec.ToString(), tt.result)
+	}
+}

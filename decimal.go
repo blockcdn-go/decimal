@@ -1,9 +1,9 @@
 package decimal
 
 import (
+	"errors"
 	"math"
 	"strconv"
-	"errors"
 	"strings"
 )
 
@@ -40,7 +40,7 @@ const (
 	// Ceiling is not supported now.
 	modeCeiling RoundMode = "Ceiling"
 
-	linearMax = 18
+	linearMax       = 18
 	MaxDecimalScale = 30
 )
 
@@ -113,8 +113,6 @@ type RangeTable struct {
 	LatinOffset int // number of entries in R16 with Hi <= MaxLatin1
 }
 
-
-
 // Range16 represents of a range of 16-bit Unicode code points. The range runs from Lo to Hi
 // inclusive and has the specified stride.
 type Range16 struct {
@@ -137,7 +135,7 @@ const (
 )
 
 var (
-	ErrOverflow = errors.New("[types] ErrOverflow")
+	ErrOverflow  = errors.New("[types] ErrOverflow")
 	ErrTruncated = errors.New("[types] ErrTruncated")
 	ErrBadNumber = errors.New("[types] ErrBadNumber")
 	ErrDivByZero = errors.New("[types] ErrDivByZero")
@@ -268,6 +266,13 @@ type MyDecimal struct {
 	wordBuf [maxWordBufLen]int32
 }
 
+// Abs returns the absolute value of d.
+func (d *MyDecimal) Abs() *MyDecimal {
+	dec := *d
+	dec.negative = false
+	return &dec
+}
+
 // IsNegative returns whether a decimal is negative.
 func (d *MyDecimal) IsNegative() bool {
 	return d.negative
@@ -390,7 +395,7 @@ func (d *MyDecimal) ToBytes() (str []byte) {
 	return
 }
 
-func (d *MyDecimal) ToString() (string) {
+func (d *MyDecimal) ToString() string {
 	return string(d.ToBytes())
 }
 
@@ -2183,7 +2188,6 @@ func NewMaxOrMinDec(negative bool, prec, frac int) (*MyDecimal, error) {
 	err := dec.FromString(str)
 	return dec, err
 }
-
 
 func isSpace(c byte) bool {
 	return c == ' ' || c == '\t'
