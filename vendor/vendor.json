@@ -1,0 +1,19 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "CSPbwbyzqA6sfORicn4HFtIhF/c=",
+			"path": "github.com/davecgh/go-spew/spew",
+			"revision": "8991bc29aa16c548c550c7ff78260e27b9ab7c73",
+			"revisionTime": "2018-02-21T22:46:20Z"
+		},
+		{
+			"checksumSHA1": "y2BGECizlOOZvgSVtLjM/uQdyWg=",
+			"path": "github.com/gotoxu/assert",
+			"revision": "8be2136ffe4eda639e38e8104a8f0d15d75e9565",
+			"revisionTime": "2018-05-01T08:32:13Z"
+		}
+	],
+	"rootPath": "github.com/blockcdn-go/decimal"
+}
