@@ -397,7 +397,7 @@ func TestAdd(t *testing.T) {
 		a, _ := NewDecFromStringForTest(tt.a)
 		b, _ := NewDecFromStringForTest(tt.b)
 		var sum MyDecimal
-		err := DecimalAdd(a, b, &sum)
+		err := DecimalAdd(*a, *b, &sum)
 		if err != nil {
 			assert.DeepEqual(t, err, tt.err)
 		} else {
@@ -435,7 +435,7 @@ func TestSub(t *testing.T) {
 		var a, b, sum MyDecimal
 		a.FromString([]byte(tt.a))
 		b.FromString([]byte(tt.b))
-		err := DecimalSub(&a, &b, &sum)
+		err := DecimalSub(a, b, &sum)
 		if err != nil {
 			assert.DeepEqual(t, err, tt.err)
 		} else {
@@ -467,7 +467,7 @@ func TestMul(t *testing.T) {
 		var a, b, product MyDecimal
 		a.FromString([]byte(tt.a))
 		b.FromString([]byte(tt.b))
-		err := DecimalMul(&a, &b, &product)
+		err := DecimalMul(a, b, &product)
 		if err != nil {
 			assert.DeepEqual(t, err, tt.err)
 		} else {
@@ -555,7 +555,7 @@ func TestDivMod(t *testing.T) {
 		var a, b, to MyDecimal
 		a.FromString([]byte(tt.a))
 		b.FromString([]byte(tt.b))
-		ec := DecimalDiv(&a, &b, &to, DivFracIncr)
+		ec := DecimalDiv(a, b, &to, DivFracIncr)
 		if tt.err == ErrDivByZero {
 			continue
 		}
@@ -578,7 +578,7 @@ func TestDivMod(t *testing.T) {
 		var a, b, to MyDecimal
 		a.FromString([]byte(tt.a))
 		b.FromString([]byte(tt.b))
-		ec := DecimalMod(&a, &b, &to)
+		ec := DecimalMod(a, b, &to)
 
 		if tt.err == ErrDivByZero {
 			continue

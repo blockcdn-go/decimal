@@ -1393,23 +1393,23 @@ func (d *MyDecimal) Compare(to *MyDecimal) (int, error) {
 }
 
 // DecimalAdd adds two decimals, sets the result to 'to'.
-func DecimalAdd(from1, from2, to *MyDecimal) error {
+func DecimalAdd(from1, from2 MyDecimal, to *MyDecimal) error {
 	to.resultFrac = myMaxInt8(from1.resultFrac, from2.resultFrac)
 	if from1.negative == from2.negative {
-		return doAdd(from1, from2, to)
+		return doAdd(&from1, &from2, to)
 	}
-	_, err := doSub(from1, from2, to)
+	_, err := doSub(&from1, &from2, to)
 	return err
 }
 
 // DecimalSub subs one decimal from another, sets the result to 'to'.
-func DecimalSub(from1, from2, to *MyDecimal) error {
+func DecimalSub(from1, from2 MyDecimal, to *MyDecimal) error {
 	to.resultFrac = myMaxInt8(from1.resultFrac, from2.resultFrac)
 	if from1.negative == from2.negative {
-		_, err := doSub(from1, from2, to)
+		_, err := doSub(&from1, &from2, to)
 		return err
 	}
-	return doAdd(from1, from2, to)
+	return doAdd(&from1, &from2, to)
 }
 
 func doSub(from1, from2, to *MyDecimal) (cmp int, err error) {
@@ -1731,7 +1731,7 @@ DecimalMul multiplies two decimals.
     XXX if this library is to be used with huge numbers of thousands of
     digits, fast multiplication must be implemented.
 */
-func DecimalMul(from1, from2, to *MyDecimal) error {
+func DecimalMul(from1, from2 MyDecimal, to *MyDecimal) error {
 	var (
 		err         error
 		wordsInt1   = digitsToWords(int(from1.digitsInt))
@@ -1859,9 +1859,9 @@ func DecimalMul(from1, from2, to *MyDecimal) error {
 // from2    - divisor
 // to       - quotient
 // fracIncr - increment of fraction
-func DecimalDiv(from1, from2, to *MyDecimal, fracIncr int) error {
+func DecimalDiv(from1, from2 MyDecimal, to *MyDecimal, fracIncr int) error {
 	to.resultFrac = myMinInt8(from1.resultFrac+int8(fracIncr), MaxDecimalScale)
-	return doDivMod(from1, from2, to, nil, fracIncr)
+	return doDivMod(&from1, &from2, to, nil, fracIncr)
 }
 
 /*
@@ -1888,9 +1888,9 @@ DecimalMod does modulus of two decimals.
 
    thus, there's no requirement for M or N to be integers
 */
-func DecimalMod(from1, from2, to *MyDecimal) error {
+func DecimalMod(from1, from2 MyDecimal, to *MyDecimal) error {
 	to.resultFrac = myMaxInt8(from1.resultFrac, from2.resultFrac)
-	return doDivMod(from1, from2, nil, to, 0)
+	return doDivMod(&from1, &from2, nil, to, 0)
 }
 
 func doDivMod(from1, from2, to, mod *MyDecimal, fracIncr int) error {
