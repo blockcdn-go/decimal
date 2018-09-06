@@ -401,10 +401,16 @@ func (d *MyDecimal) ToString() string {
 
 // FromString parses decimal from string.
 func (d *MyDecimal) FromString(str []byte) error {
+	dotCnt := strings.Count(string(str), ".")
+	if dotCnt > 2 {
+		return ErrBadNumber
+	}
 	for i := 0; i < len(str); i++ {
 		if !isSpace(str[i]) {
 			str = str[i:]
 			break
+		} else {
+			return ErrBadNumber
 		}
 	}
 	if len(str) == 0 {
